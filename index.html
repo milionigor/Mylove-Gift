@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
+<meta name="theme-color" content="#0b0a1f" />
+<title>Para a Graziely 💌</title>
+
+<!--
+  ============================================================
+  SURPRESA PARA A GRAZIELY
+  ------------------------------------------------------------
+  Landing page romântica • HTML + CSS + JS puros
+  Design: Glassmorphism, gradientes premium, partículas suaves,
+  transições cinematográficas e efeito máquina de escrever.
+
+  Estrutura do projeto:
+    index.html          -> este arquivo
+    assets/us.mp4       -> o vídeo (mantenha esse nome)
+
+  COMO PERSONALIZAR (procure por  >>> EDITE AQUI  no código):
+    1. Nome / textos da tela inicial
+    2. A mensagem do efeito typewriter (array MENSAGEM)
+    3. Cores do gradiente (variáveis CSS em :root)
+
+  Observação técnica sobre o vídeo:
+    O vídeo toca com SOM e em LOOP infinito assim que ela toca em
+    "Desbloquear surpresa" — o toque dela é o gesto que o navegador
+    exige para liberar o áudio. Se ainda assim o som for bloqueado,
+    aparece um botão "Tocar vídeo" para ativar com 1 toque.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  /* ===========================================================
+     1. TOKENS DE DESIGN  ( >>> EDITE AQUI as cores se quiser )
+     =========================================================== */
+  :root {
+    /* Paleta base — noite romântica com brilho quente */
+    --bg-0: #0b0a1f;          /* fundo mais escuro */
+    --bg-1: #1a1030;          /* roxo profundo */
+    --bg-2: #3a1c47;          /* ameixa */
+    --glow-rose: #ff7eb3;     /* rosa brilhante */
+    --glow-gold: #ffd9a0;     /* dourado suave */
+    --glow-violet: #a78bfa;   /* violeta */
+
+    --text-strong: #fff5f8;
+    --text-soft: rgba(255, 245, 248, 0.72);
+    --text-faint: rgba(255, 245, 248, 0.45);
+
+    /* Vidro */
+    --glass-bg: rgba(255, 255, 255, 0.07);
+    --glass-brd: rgba(255, 255, 255, 0.16);
+    --glass-hi: rgba(255, 255, 255, 0.45);
+
+    --ease-cine: cubic-bezier(0.22, 1, 0.36, 1);      /* saída suave "Apple" */
+    --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===========================================================
+     2. RESET + APP SHELL (comportamento de app nativo)
+     =========================================================== */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;                 /* nada de rolagem na raiz */
+    overflow-x: hidden;               /* trava qualquer estouro lateral */
+    background: var(--bg-0);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior: none;
+  }
+
+  body {
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-strong);
+    position: fixed;                  /* trava o "puxa pra atualizar" no mobile */
+    inset: 0;
+  }
+
+  /* Esconde scrollbar em qualquer container que role (só o de conteúdo) */
+  .scroll-area {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;            /* Firefox */
+  }
+  .scroll-area::-webkit-scrollbar {
+    display: none;                    /* WebKit */
+  }
+
+  /* Usa a altura real da viewport no mobile (barra de endereço) */
+  .stage {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    display: grid;
+    place-items: center;
+  }
+
+  /* ===========================================================
+     3. FUNDO — gradiente vivo + blobs de luz + partículas
+     =========================================================== */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(120% 120% at 15% 10%, rgba(167, 139, 250, 0.28), transparent 55%),
+      radial-gradient(120% 120% at 85% 90%, rgba(255, 126, 179, 0.30), transparent 55%),
+      linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
+  }
+
+  /* blobs de luz que respiram lentamente */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.55;
+    will-change: transform;
+    animation: drift 22s var(--ease-soft) infinite alternate;
+  }
+  .blob.b1 {
+    width: 46vmax; height: 46vmax;
+    top: -18vmax; left: -14vmax;
+    background: radial-gradient(circle at 30% 30%, var(--glow-violet), transparent 60%);
+  }
+  .blob.b2 {
+    width: 40vmax; height: 40vmax;
+    bottom: -16vmax; right: -12vmax;
+    background: radial-gradient(circle at 60% 60%, var(--glow-rose), transparent 60%);
+    animation-duration: 28s;
+  }
+  .blob.b3 {
+    width: 30vmax; height: 30vmax;
+    top: 40%; left: 55%;
+    background: radial-gradient(circle at 50% 50%, var(--glow-gold), transparent 65%);
+    opacity: 0.35;
+    animation-duration: 34s;
+  }
+
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(4vmax, 3vmax, 0) scale(1.12); }
+  }
+
+  /* canvas de partículas (vaga-lumes / corações) */
+  #particles {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ===========================================================
+     4. CARTÃO DE VIDRO (base para as duas telas)
+     =========================================================== */
+  .glass {
+    position: relative;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-brd);
+    border-radius: 28px;
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    box-shadow:
+      0 20px 60px -12px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 0 var(--glass-hi),
+      inset 0 -1px 0 0 rgba(255, 255, 255, 0.04);
+  }
+  /* brilho sutil na borda superior */
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0) 35%,
+      rgba(255, 255, 255, 0) 70%,
+      rgba(255, 255, 255, 0.14)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+            mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* ===========================================================
+     5. TELA 1 — DESBLOQUEIO
+     =========================================================== */
+  #lockScreen {
+    z-index: 3;
+    width: min(88vw, 380px);
+    padding: 44px 30px 40px;
+    text-align: center;
+    transition: opacity 0.9s var(--ease-cine),
+                transform 0.9s var(--ease-cine),
+                filter 0.9s var(--ease-cine);
+  }
+  #lockScreen.is-leaving {
+    opacity: 0;
+    transform: scale(1.06) translateY(-8px);
+    filter: blur(6px);
+    pointer-events: none;
+  }
+
+  .envelope {
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.16), rgba(255,255,255,0.03));
+    border: 1px solid var(--glass-brd);
+    box-shadow: inset 0 1px 0 var(--glass-hi);
+    animation: bob 3.4s var(--ease-soft) infinite;
+  }
+  .envelope svg { width: 44px; height: 44px; }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-7px); }
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+  }
+
+  .headline {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(1.55rem, 6.2vw, 2.1rem);
+    line-height: 1.22;
+    color: var(--text-strong);
+    margin-bottom: 12px;
+    text-wrap: balance;
+  }
+  .headline .name {
+    font-style: italic;
+    background: linear-gradient(100deg, var(--glow-rose), var(--glow-gold));
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+
+  .subcopy {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--text-soft);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  /* Botão pulsante */
+  .unlock-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 30px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #2a0f1e;
+    background: linear-gradient(100deg, var(--glow-gold), var(--glow-rose));
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.35s var(--ease-cine), box-shadow 0.35s var(--ease-cine);
+    box-shadow: 0 10px 30px -6px rgba(255, 126, 179, 0.6);
+    animation: pulse 2.6s ease-in-out infinite;
+  }
+  .unlock-btn:hover { transform: translateY(-2px) scale(1.02); }
+  .unlock-btn:active { transform: scale(0.97); }
+  .unlock-btn svg { width: 18px; height: 18px; }
+
+  /* onda de brilho atravessando o botão */
+  .unlock-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(255, 255, 255, 0.55),
+      transparent
+    );
+    transform: skewX(-20deg);
+    animation: sheen 3.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 10px 30px -6px rgba(255, 126, 179, 0.55); }
+    50%      { box-shadow: 0 14px 42px 2px rgba(255, 126, 179, 0.85); }
+  }
+  @keyframes sheen {
+    0%, 60% { left: -120%; }
+    100%    { left: 130%; }
+  }
+
+  /* ===========================================================
+     6. TELA 2 — REVELAÇÃO (vídeo + mensagem)
+     =========================================================== */
+  #revealScreen {
+    z-index: 2;
+    width: min(91vw, 420px);
+    height: 94dvh;
+    max-height: 900px;
+    padding: 16px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: scale(0.94) translateY(18px);
+    pointer-events: none;
+    transition: opacity 1s var(--ease-cine) 0.15s,
+                transform 1.1s var(--ease-cine) 0.15s;
+  }
+  #revealScreen.is-active {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .reveal-title {
+    flex: 0 0 auto;
+    text-align: center;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+    color: var(--text-strong);
+  }
+
+  /* Área do vídeo: altura fixa e proporcional à tela. A moldura vive
+     centrada dentro dela, mantendo a proporção 9:16 exata. */
+  .video-slot {
+    flex: 0 0 auto;
+    height: min(42dvh, 380px);
+    min-height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* Telas altas podem dar mais espaço ao vídeo sem sufocar a carta */
+  @media (min-height: 800px) {
+    .video-slot { height: min(46dvh, 440px); }
+  }
+
+  /* Moldura de vidro do vídeo.
+     aspect-ratio 9/16 = proporção exata do vídeo (1080x1920).
+     A moldura ocupa toda a altura do slot e a largura acompanha
+     mantendo 9:16 — o vídeo aparece SEMPRE inteiro, sem corte
+     e sem distorção, em qualquer celular. */
+  .video-frame {
+    position: relative;
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--glass-brd);
+    box-shadow:
+      0 18px 44px -14px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 var(--glass-hi);
+  }
+  .video-frame video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;   /* mostra o vídeo INTEIRO, nunca corta */
+    display: block;
+    background: #000;
+  }
+
+  /* Botão de fallback caso o autoplay seja bloqueado */
+  .tap-to-play {
+    position: absolute;
+    inset: 0;
+    display: none;
+    place-items: center;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(11, 10, 31, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: none;
+    color: var(--text-strong);
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tap-to-play.show { display: grid; }
+  .tap-to-play .play-ring {
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(100deg, var(--glow-gold), var(--glow-rose));
+    box-shadow: 0 8px 26px -4px rgba(255, 126, 179, 0.7);
+  }
+  .tap-to-play .play-ring svg { width: 22px; height: 22px; margin-left: 3px; }
+
+  /* Área da mensagem (typewriter) — ocupa todo o espaço restante
+     do cartão e rola sozinha, sem mexer no vídeo acima. */
+  .message-card {
+    flex: 1 1 auto;
+    min-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding: 18px 18px 20px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* leve degradê no topo/base sugerindo que há mais texto */
+    -webkit-mask: linear-gradient(180deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+            mask: linear-gradient(180deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+  }
+  .message-card::-webkit-scrollbar { display: none; }
+  .message-text {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(1.02rem, 4.4vw, 1.2rem);
+    line-height: 1.7;
+    color: var(--text-soft);
+    white-space: pre-wrap;
+  }
+  /* cursor piscando da máquina de escrever */
+  .caret {
+    display: inline-block;
+    width: 2px;
+    height: 1.05em;
+    margin-left: 2px;
+    vertical-align: -0.18em;
+    background: var(--glow-rose);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .signature {
+    margin-top: 14px;
+    text-align: right;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text-faint);
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-soft);
+  }
+  .signature.show { opacity: 1; }
+
+  /* ===========================================================
+     7. ACESSIBILIDADE — respeita quem prefere menos movimento
+     =========================================================== */
+  @media (prefers-reduced-motion: reduce) {
+    .blob,
+    .envelope,
+    .unlock-btn,
+    .unlock-btn::after {
+      animation: none !important;
+    }
+    * {
+      transition-duration: 0.2s !important;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <!-- Fundo -->
+  <div class="backdrop" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+  </div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <!-- Palco central -->
+  <main class="stage">
+
+    <!-- ======= TELA 1: DESBLOQUEIO ======= -->
+    <section id="lockScreen" class="glass">
+      <div class="envelope" aria-hidden="true">
+        <!-- ícone de envelope com coração -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="url(#g1)" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffd9a0" />
+              <stop offset="1" stop-color="#ff7eb3" />
+            </linearGradient>
+          </defs>
+          <rect x="3" y="5" width="18" height="14" rx="2.5" />
+          <path d="M3.5 6.5 12 13l8.5-6.5" />
+          <path d="M12 17.5c1.6-1.2 3-2.3 3-3.7a1.6 1.6 0 0 0-3-.7 1.6 1.6 0 0 0-3 .7c0 1.4 1.4 2.5 3 3.7Z"
+                fill="url(#g1)" stroke="none" />
+        </svg>
+      </div>
+
+      <!-- >>> EDITE AQUI: textos da tela inicial -->
+      <p class="eyebrow">Feito com carinho</p>
+      <h1 class="headline">Oi, <span class="name">Graziely</span>…<br />tem algo aqui pra você</h1>
+      <p class="subcopy">
+        Coloca o fone, aumenta o volume<br />
+        e toca no botão quando estiver pronta.
+      </p>
+
+      <button id="unlockBtn" class="unlock-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6C19 16.5 12 21 12 21Z" />
+        </svg>
+        Desbloquear surpresa
+      </button>
+    </section>
+
+    <!-- ======= TELA 2: REVELAÇÃO ======= -->
+    <section id="revealScreen" class="glass">
+      <!-- >>> EDITE AQUI: título acima do vídeo -->
+      <h2 class="reveal-title">para você, Graziely</h2>
+
+      <div class="video-slot">
+        <div class="video-frame">
+          <video
+            id="loveVideo"
+            playsinline
+            webkit-playsinline
+            preload="auto"
+            loop
+            controls
+            controlslist="nodownload noplaybackrate nofullscreen"
+            disablepictureinpicture
+          >
+            <!-- O vídeo. Se quiser trocar, mantenha o nome assets/us.mp4 -->
+            <source src="assets/us.mp4" type="video/mp4" />
+            Seu navegador não suporta a reprodução deste vídeo.
+          </video>
+
+          <button id="tapToPlay" class="tap-to-play" type="button">
+            <span class="play-ring" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            </span>
+            Tocar vídeo
+          </button>
+        </div>
+      </div>
+
+      <div class="message-card">
+        <p id="messageText" class="message-text"></p>
+        <!-- >>> EDITE AQUI: sua assinatura -->
+        <p id="signature" class="signature">— com carinho, Igor</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+
+    /* =========================================================
+       A. PARTÍCULAS — vaga-lumes + corações minimalistas
+       Canvas leve, usa requestAnimationFrame e respeita DPR.
+       ========================================================= */
+    (function particleField() {
+      const canvas = document.getElementById("particles");
+      const ctx = canvas.getContext("2d");
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      let w, h, dpr, particles;
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = canvas.width = innerWidth * dpr;
+        h = canvas.height = innerHeight * dpr;
+        canvas.style.width = innerWidth + "px";
+        canvas.style.height = innerHeight + "px";
+      }
+
+      function makeParticles() {
+        // densidade proporcional à tela (mobile-first: poucas partículas)
+        const count = reduce ? 14 : Math.round((innerWidth * innerHeight) / 26000);
+        particles = Array.from({ length: count }, () => spawn(true));
+      }
+
+      function spawn(initial) {
+        const isHeart = Math.random() < 0.22;
+        return {
+          x: Math.random() * w,
+          y: initial ? Math.random() * h : h + 20 * dpr,
+          r: (isHeart ? 5 : 1.1 + Math.random() * 1.6) * dpr,
+          vy: (0.12 + Math.random() * 0.35) * dpr,
+          vx: (Math.random() - 0.5) * 0.25 * dpr,
+          a: 0.15 + Math.random() * 0.55,
+          tw: Math.random() * Math.PI * 2,      // fase do brilho
+          tws: 0.01 + Math.random() * 0.03,
+          heart: isHeart,
+        };
+      }
+
+      function drawHeart(p) {
+        const s = p.r;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.scale(s / 5, s / 5);
+        ctx.beginPath();
+        ctx.moveTo(0, 2.5);
+        ctx.bezierCurveTo(0, 1, -1.6, -1.2, -3.2, -1.2);
+        ctx.bezierCurveTo(-5.6, -1.2, -5.6, 2, -5.6, 2);
+        ctx.bezierCurveTo(-5.6, 4, -3.2, 6.2, 0, 8);
+        ctx.bezierCurveTo(3.2, 6.2, 5.6, 4, 5.6, 2);
+        ctx.bezierCurveTo(5.6, 2, 5.6, -1.2, 3.2, -1.2);
+        ctx.bezierCurveTo(1.6, -1.2, 0, 1, 0, 2.5);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(255, 150, 190, " + p.a * 0.9 + ")";
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function frame() {
+        ctx.clearRect(0, 0, w, h);
+        for (const p of particles) {
+          p.y -= p.vy;
+          p.x += p.vx;
+          p.tw += p.tws;
+          const flick = 0.6 + 0.4 * Math.sin(p.tw);
+
+          if (p.heart) {
+            p.a = Math.max(0, p.a);
+            drawHeart(p);
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
+            glow.addColorStop(0, "rgba(255, 236, 210, " + p.a * flick + ")");
+            glow.addColorStop(1, "rgba(255, 236, 210, 0)");
+            ctx.fillStyle = glow;
+            ctx.fill();
+          }
+
+          // recicla ao sair do topo
+          if (p.y < -20 * dpr) Object.assign(p, spawn(false));
+        }
+        requestAnimationFrame(frame);
+      }
+
+      resize();
+      makeParticles();
+      frame();
+
+      let rt;
+      addEventListener("resize", () => {
+        clearTimeout(rt);
+        rt = setTimeout(() => {
+          resize();
+          makeParticles();
+        }, 200);
+      });
+    })();
+
+    /* =========================================================
+       B. TRANSIÇÃO + VÍDEO
+       ========================================================= */
+    const lockScreen = document.getElementById("lockScreen");
+    const revealScreen = document.getElementById("revealScreen");
+    const unlockBtn = document.getElementById("unlockBtn");
+    const video = document.getElementById("loveVideo");
+    const tapToPlay = document.getElementById("tapToPlay");
+
+    let started = false;
+
+    function startExperience() {
+      if (started) return;
+      started = true;
+
+      /* IMPORTANTE: o play() COM SOM tem que acontecer AGORA, no mesmo
+         "tick" do clique — é o gesto da usuária que libera o áudio.
+         Se adiarmos com setTimeout, alguns navegadores bloqueiam o som. */
+      video.muted = false;
+      video.volume = 1;
+      const playPromise = video.play();
+
+      if (playPromise && typeof playPromise.then === "function") {
+        playPromise
+          .then(hideTapButton)
+          .catch(() => {
+            // Som bloqueado (raro, já que veio de um clique) -> toca mudo
+            // e mostra o botão pra ela ativar o som com 1 toque.
+            video.muted = true;
+            video.play().catch(() => {});
+            showTapButton();
+          });
+      }
+
+      // Transição visual: tela de bloqueio sai, tela do vídeo entra.
+      lockScreen.classList.add("is-leaving");
+      setTimeout(() => {
+        lockScreen.style.display = "none";
+        revealScreen.classList.add("is-active");
+      }, 850);
+    }
+
+    function showTapButton() {
+      tapToPlay.classList.add("show");
+    }
+    function hideTapButton() {
+      tapToPlay.classList.remove("show");
+    }
+
+    // Toque no fallback: liga o som (gesto garante permissão). NÃO reinicia
+    // o vídeo — só ativa o áudio de onde estiver.
+    tapToPlay.addEventListener("click", () => {
+      video.muted = false;
+      video.volume = 1;
+      video.play().finally(hideTapButton);
+    });
+
+    /* Se o vídeo não puder ser lido (ex.: .mov não suportado no Android),
+       não deixa a tela quebrada: esconde a moldura e a carta ocupa tudo.
+       A mensagem começa mesmo assim (ver rede de segurança na seção C). */
+    video.addEventListener("error", handleVideoFail);
+    for (const src of video.querySelectorAll("source")) {
+      src.addEventListener("error", () => {
+        // só falha de verdade quando NENHUM source funcionou
+        if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+          handleVideoFail();
+        }
+      });
+    }
+    function handleVideoFail() {
+      const slot = document.querySelector(".video-slot");
+      if (slot) slot.style.display = "none";
+      hideTapButton();
+      typeMessage();
+    }
+
+    unlockBtn.addEventListener("click", startExperience);
+
+    /* =========================================================
+       C. EFEITO MÁQUINA DE ESCREVER
+       Começa quando o vídeo realmente inicia a tocar.
+       >>> EDITE AQUI: cada string do array vira um parágrafo.
+       Use "" (string vazia) para uma linha em branco de respiro.
+       ========================================================= */
+    const MENSAGEM = [
+      "Oi, meu neném. ❤️",
+      "",
+      "Tem um tempo que eu queria te falar tudo isso, mas queria esperar o momento certo. Não queria simplesmente mandar uma mensagem qualquer no meio da correria. Queria que você soubesse, com calma, o quanto você significa pra mim.",
+      "",
+      "Você tem um jeito que eu nem sei explicar de deixar meus dias mais leves. É engraçado, porque às vezes acontece alguma coisa e a primeira pessoa que eu penso em contar é você. Ou eu lembro de alguma coisa que você falou, de algum momento nosso, e simplesmente começo a sorrir sozinho.",
+      "",
+      "A verdade é que você foi se tornando alguém muito especial pra mim sem eu nem perceber. E hoje eu olho pra você e penso no quanto sou feliz por ter te conhecido.",
+      "",
+      "Eu amo seu jeito, suas manias, seu sorriso, nossas conversas e até essas pequenas coisas que talvez você nem perceba, mas que fazem eu gostar ainda mais de você.",
+      "",
+      "E, meu Deus… você é linda. 😭❤️",
+      "Que mulher, viu? Às vezes eu fico até sem saber o que falar quando olho pra você. KKKKK.",
+      "",
+      "Mas mais do que a sua beleza, eu admiro a pessoa que você é. Você é uma menina maravilhosa, forte, cheia de sonhos e com um coração que eu espero que você nunca deixe o mundo mudar.",
+      "",
+      "Eu quero muito ver você conquistando tudo aquilo que sonha. Quero ver você crescendo, realizando seus planos, sendo feliz e olhando pra trás um dia com orgulho de tudo que conseguiu. E quando as coisas ficarem difíceis, espero que você nunca esqueça o quanto é capaz.",
+      "",
+      "Eu te amo. ❤️",
+      "E talvez essas três palavras sejam pequenas demais pra explicar tudo que eu sinto, mas são as mais sinceras que eu poderia te dizer.",
+      "",
+      "Obrigado por existir, por ser você e por ter se tornado uma parte tão bonita da minha vida.",
+      "",
+      "Espero que, independentemente do que aconteça, você nunca duvide do quanto é especial pra mim. ❤️",
+    ];
+
+    const messageEl = document.getElementById("messageText");
+    const signatureEl = document.getElementById("signature");
+    const messageCard = messageEl.parentElement;   // área que rola
+
+    let typingStarted = false;
+
+    function typeMessage() {
+      if (typingStarted) return;
+      typingStarted = true;
+
+      const full = MENSAGEM.join("\n");
+      const caret = document.createElement("span");
+      caret.className = "caret";
+
+      let i = 0;
+      messageEl.textContent = "";
+      messageEl.appendChild(caret);
+
+      /* Ritmo da digitação. A mensagem é longa, então mantemos ágil
+         mas com respiro na pontuação e nas quebras de parágrafo. */
+      const SPEED = 32;          // ms por caractere
+      const PAUSE_COMMA = 160;   // vírgula / reticências
+      const PAUSE_STOP = 300;    // ponto final, ! e ?
+      const PAUSE_PARA = 480;    // troca de parágrafo (\n)
+
+      function delayFor(ch) {
+        if (ch === "\n") return PAUSE_PARA;
+        if (ch === "." || ch === "!" || ch === "?") return PAUSE_STOP;
+        if (ch === "," || ch === "…") return PAUSE_COMMA;
+        return SPEED;
+      }
+
+      function tick() {
+        if (i >= full.length) {
+          // terminou: segura o cursor um instante e revela a assinatura
+          setTimeout(() => {
+            caret.remove();
+            signatureEl.classList.add("show");
+            messageCard.scrollTop = messageCard.scrollHeight;
+          }, 1000);
+          return;
+        }
+        const ch = full[i++];
+        caret.insertAdjacentText("beforebegin", ch);
+
+        // acompanha a digitação rolando SÓ a área da mensagem (vídeo fica parado)
+        messageCard.scrollTop = messageCard.scrollHeight;
+
+        setTimeout(tick, delayFor(ch));
+      }
+
+      tick();
+    }
+
+    // Dispara a digitação assim que o vídeo começa a rodar
+    video.addEventListener("playing", typeMessage, { once: true });
+    // Rede de segurança: se por algum motivo o vídeo não disparar "playing",
+    // começa a mensagem mesmo assim alguns segundos após a revelação.
+    unlockBtn.addEventListener("click", () => {
+      setTimeout(typeMessage, 6000);
+    });
+  </script>
+</body>
+</html>
