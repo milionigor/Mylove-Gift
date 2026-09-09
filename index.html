@@ -776,34 +776,218 @@
     /* =========================================================
        C. EFEITO MÁQUINA DE ESCREVER
        Começa quando o vídeo realmente inicia a tocar.
-       >>> EDITE AQUI: cada string do array vira um parágrafo.
-       Use "" (string vazia) para uma linha em branco de respiro.
+
+       >>> EDITE AQUI: MENSAGEM DO DIA
+       ---------------------------------------------------------
+       Cada item de MENSAGENS é UMA mensagem completa (um array de
+       parágrafos). Use "" (string vazia) para uma linha em branco
+       de respiro.
+
+       Todo dia o site sorteia UMA mensagem da lista e mostra a
+       mesma o dia inteiro — muda sozinha à meia-noite (horário do
+       celular dela).
+
+       Para adicionar uma nova mensagem, é só colar mais um bloco
+       [ ... ] no array MENSAGENS, separado por vírgula. Quanto
+       mais mensagens, mais tempo até começar a repetir.
        ========================================================= */
-    const MENSAGEM = [
-      "Oi, meu neném. ❤️",
-      "",
-      "Tem um tempo que eu queria te falar tudo isso, mas queria esperar o momento certo. Não queria simplesmente mandar uma mensagem qualquer no meio da correria. Queria que você soubesse, com calma, o quanto você significa pra mim.",
-      "",
-      "Você tem um jeito que eu nem sei explicar de deixar meus dias mais leves. É engraçado, porque às vezes acontece alguma coisa e a primeira pessoa que eu penso em contar é você. Ou eu lembro de alguma coisa que você falou, de algum momento nosso, e simplesmente começo a sorrir sozinho.",
-      "",
-      "A verdade é que você foi se tornando alguém muito especial pra mim sem eu nem perceber. E hoje eu olho pra você e penso no quanto sou feliz por ter te conhecido.",
-      "",
-      "Eu amo seu jeito, suas manias, seu sorriso, nossas conversas e até essas pequenas coisas que talvez você nem perceba, mas que fazem eu gostar ainda mais de você.",
-      "",
-      "E, meu Deus… você é linda. 😭❤️",
-      "Que mulher, viu? Às vezes eu fico até sem saber o que falar quando olho pra você. KKKKK.",
-      "",
-      "Mas mais do que a sua beleza, eu admiro a pessoa que você é. Você é uma menina maravilhosa, forte, cheia de sonhos e com um coração que eu espero que você nunca deixe o mundo mudar.",
-      "",
-      "Eu quero muito ver você conquistando tudo aquilo que sonha. Quero ver você crescendo, realizando seus planos, sendo feliz e olhando pra trás um dia com orgulho de tudo que conseguiu. E quando as coisas ficarem difíceis, espero que você nunca esqueça o quanto é capaz.",
-      "",
-      "Eu te amo. ❤️",
-      "E talvez essas três palavras sejam pequenas demais pra explicar tudo que eu sinto, mas são as mais sinceras que eu poderia te dizer.",
-      "",
-      "Obrigado por existir, por ser você e por ter se tornado uma parte tão bonita da minha vida.",
-      "",
-      "Espero que, independentemente do que aconteça, você nunca duvide do quanto é especial pra mim. ❤️",
+    const MENSAGENS = [
+
+      // ---- Mensagem 1 ----
+      [
+        "Oi, meu neném. ❤️",
+        "",
+        "Tem um tempo que eu queria te falar tudo isso, mas queria esperar o momento certo. Não queria simplesmente mandar uma mensagem qualquer no meio da correria. Queria que você soubesse, com calma, o quanto você significa pra mim.",
+        "",
+        "Você tem um jeito que eu nem sei explicar de deixar meus dias mais leves. É engraçado, porque às vezes acontece alguma coisa e a primeira pessoa que eu penso em contar é você. Ou eu lembro de alguma coisa que você falou, de algum momento nosso, e simplesmente começo a sorrir sozinho.",
+        "",
+        "A verdade é que você foi se tornando alguém muito especial pra mim sem eu nem perceber. E hoje eu olho pra você e penso no quanto sou feliz por ter te conhecido.",
+        "",
+        "Eu amo seu jeito, suas manias, seu sorriso, nossas conversas e até essas pequenas coisas que talvez você nem perceba, mas que fazem eu gostar ainda mais de você.",
+        "",
+        "E, meu Deus… você é linda. 😭❤️",
+        "Que mulher, viu? Às vezes eu fico até sem saber o que falar quando olho pra você. KKKKK.",
+        "",
+        "Mas mais do que a sua beleza, eu admiro a pessoa que você é. Você é uma menina maravilhosa, forte, cheia de sonhos e com um coração que eu espero que você nunca deixe o mundo mudar.",
+        "",
+        "Eu quero muito ver você conquistando tudo aquilo que sonha. Quero ver você crescendo, realizando seus planos, sendo feliz e olhando pra trás um dia com orgulho de tudo que conseguiu. E quando as coisas ficarem difíceis, espero que você nunca esqueça o quanto é capaz.",
+        "",
+        "Eu te amo. ❤️",
+        "E talvez essas três palavras sejam pequenas demais pra explicar tudo que eu sinto, mas são as mais sinceras que eu poderia te dizer.",
+        "",
+        "Obrigado por existir, por ser você e por ter se tornado uma parte tão bonita da minha vida.",
+        "",
+        "Espero que, independentemente do que aconteça, você nunca duvide do quanto é especial pra mim. ❤️",
+      ],
+
+      // ---- Mensagem 2 ----
+      [
+        "Bom dia, Graziely. ☀️",
+        "",
+        "Acordei pensando em você. De novo. KKKK.",
+        "",
+        "É meio automático já: abro o olho e você é um dos primeiros pensamentos do dia. E é um pensamento bom, sabe? Daqueles que fazem eu levantar de bom humor sem motivo nenhum.",
+        "",
+        "Queria que seu dia hoje fosse leve. Que desse tudo certo nas coisas pequenas, que alguém te fizesse rir do nada, que você chegasse em casa cansada mas feliz.",
+        "",
+        "E se não for assim, se o dia vier meio torto, me conta. Eu gosto de ouvir você até nos dias ruins.",
+        "",
+        "Tô aqui, tá? Sempre. ❤️",
+      ],
+
+      // ---- Mensagem 3 ----
+      [
+        "Oi, meu neném.",
+        "",
+        "Hoje eu só queria falar do seu sorriso.",
+        "",
+        "Sério, é uma coisa meio injusta você sorrir desse jeito. KKKK. Muda o clima de um lugar inteiro. Eu já tava tendo um dia normal e aí lembrei de você rindo de alguma bobagem e pronto, o dia melhorou.",
+        "",
+        "Você tem esse dom de deixar as coisas mais leves sem nem tentar. As pessoas ao seu redor têm sorte, e eu tenho mais sorte ainda.",
+        "",
+        "Guarda esse sorriso pra você, mas de vez em quando aponta ele na minha direção. ❤️",
+      ],
+
+      // ---- Mensagem 4 ----
+      [
+        "Graziely,",
+        "",
+        "Deixa eu te dizer uma coisa hoje: eu admiro muito você.",
+        "",
+        "Não é só o gostar, não. É admiração mesmo. Do jeito que você encara as coisas, da forma como você corre atrás do que quer, da sua teimosia boa de não desistir fácil.",
+        "",
+        "Tem gente que fala que quer mudar de vida e fica parado. Você não. Você faz. E isso me inspira, de verdade.",
+        "",
+        "Um dia você vai olhar pra trás e ver o tamanho do caminho que andou. E eu quero estar por perto quando esse dia chegar, só pra poder dizer: eu sabia. ❤️",
+      ],
+
+      // ---- Mensagem 5 ----
+      [
+        "Oi, vida. ❤️",
+        "",
+        "Se hoje o dia tá pesado, para tudo e lê isso com calma:",
+        "",
+        "Você não precisa dar conta de tudo de uma vez. Não precisa ser forte o tempo todo. Pode cansar, pode reclamar, pode ter um dia ruim sem se sentir culpada por isso.",
+        "",
+        "As coisas vão se ajeitar. Elas sempre se ajeitam, mesmo quando parece que não. E enquanto isso não acontece, eu tô aqui pra segurar sua mão.",
+        "",
+        "Respira. Uma coisa de cada vez. Você consegue. E eu tô do seu lado. ❤️",
+      ],
+
+      // ---- Mensagem 6 ----
+      [
+        "Bom dia, minha linda.",
+        "",
+        "Acho engraçado como você virou parte da minha rotina de um jeito gostoso.",
+        "",
+        "Qualquer coisa que acontece de bom, o primeiro impulso é te contar. Vejo um lugar bonito e penso em te levar lá. Ouço uma música e já imagino você cantando errado a letra. KKKK.",
+        "",
+        "Você ocupou um espaço na minha vida que eu nem sabia que tava vazio. E agora não dá mais pra imaginar sem.",
+        "",
+        "Obrigado por ser você. Tenha um dia lindo, do tamanho de você. ❤️",
+      ],
+
+      // ---- Mensagem 7 ----
+      [
+        "Oi, Graziely.",
+        "",
+        "Hoje eu quero que você lembre do quanto você é querida.",
+        "",
+        "Não só por mim. Pelas pessoas que te cercam, pela sua família, pelos seus amigos. Você deixa marca boa na vida de quem te conhece, mesmo que às vezes você não perceba isso.",
+        "",
+        "Nos dias em que a cabeça te disser o contrário, não acredita nela. Acredita em mim: você faz falta, você importa, e o mundo é melhor com você nele.",
+        "",
+        "Te amo, viu? Do meu jeito, todo dia um pouco mais. ❤️",
+      ],
+
+      // ---- Mensagem 8 ----
+      [
+        "Meu neném,",
+        "",
+        "Sabe o que eu mais gosto na gente? As conversas.",
+        "",
+        "Aquelas que começam por qualquer motivo e viram madrugada. A gente falando de sonho, de medo, de bobagem, de planos. Eu podia passar horas só te ouvindo.",
+        "",
+        "Você tem um jeito de pensar que me pega. Me faz querer ser mais calmo, mais gente boa, melhor do que eu era ontem.",
+        "",
+        "Espero ter muitas dessas conversas com você ainda. Umas mil. Pra começar. ❤️",
+      ],
+
+      // ---- Mensagem 9 ----
+      [
+        "Bom dia. ☀️",
+        "",
+        "Hoje é só um oi rápido, mas um oi cheio de coisa.",
+        "",
+        "Um oi que quer dizer: pensei em você antes de você acordar. Que quer dizer: torço por você de longe. Que quer dizer: qualquer hora do dia, se você precisar, é só chamar.",
+        "",
+        "Vai lá e arrasa, do jeito que só você sabe. E quando o dia acabar, me conta como foi.",
+        "",
+        "Tô com você. ❤️",
+      ],
+
+      // ---- Mensagem 10 ----
+      [
+        "Graziely, minha linda.",
+        "",
+        "Eu ainda me pego pensando na sorte que eu tive de te conhecer.",
+        "",
+        "Podia ter sido qualquer outro dia, qualquer outra conversa, e talvez a gente nem tivesse se falado. Mas foi aquele dia, foi aquela conversa, e aqui estamos.",
+        "",
+        "Não sei explicar direito, mas parece que era pra ser. E eu não quero desperdiçar isso. Quero cuidar do que a gente tem, com calma, com carinho, no nosso tempo.",
+        "",
+        "Obrigado por ter aparecido na minha vida. Foi a melhor coisa que aconteceu comigo em muito tempo. ❤️",
+      ],
+
+      // ---- Mensagem 11 ----
+      [
+        "Oi, vida.",
+        "",
+        "Passei aqui só pra te lembrar de comer direito, beber água e não se cobrar tanto hoje. KKKK.",
+        "",
+        "Sério. Você cuida de tudo e de todo mundo, mas às vezes esquece de cuidar de você. Então hoje o recado é esse: seja gentil com você mesma.",
+        "",
+        "Você merece o mesmo carinho que você distribui por aí. E se você esquecer disso, eu tô aqui pra lembrar toda vez que precisar.",
+        "",
+        "Se cuida, tá? Por mim. ❤️",
+      ],
+
+      // ---- Mensagem 12 ----
+      [
+        "Meu neném. ❤️",
+        "",
+        "Hoje eu quero falar do futuro. Só um pouquinho, sem assustar. KKKK.",
+        "",
+        "Eu me imagino com você mais pra frente. Coisas simples: um domingo preguiçoso, uma viagem qualquer, a gente rindo de alguma história antiga que virou piada interna.",
+        "",
+        "Não tenho pressa. Quero construir isso direito, tijolo por tijolo, do nosso jeito. Mas queria que você soubesse que, quando eu penso mais pra frente, você tá lá.",
+        "",
+        "E isso me deixa muito feliz. ❤️",
+      ],
+
+      // ---- Cole mais mensagens abaixo, cada uma dentro de [ ... ] ----
+
     ];
+
+    /* Escolhe a mensagem do dia: um hash simples de "AAAA-MM-DD"
+       (data local do celular dela) vira um índice do array.
+       Resultado: a MESMA mensagem o dia inteiro; troca à meia-noite. */
+    function mensagemDoDia() {
+      const agora = new Date();
+      const chave =
+        agora.getFullYear() + "-" +
+        String(agora.getMonth() + 1).padStart(2, "0") + "-" +
+        String(agora.getDate()).padStart(2, "0");
+
+      let hash = 0;
+      for (let k = 0; k < chave.length; k++) {
+        hash = (hash * 31 + chave.charCodeAt(k)) | 0;
+      }
+      const idx = Math.abs(hash) % MENSAGENS.length;
+      return MENSAGENS[idx];
+    }
+
+    const MENSAGEM = mensagemDoDia();
 
     const messageEl = document.getElementById("messageText");
     const signatureEl = document.getElementById("signature");
