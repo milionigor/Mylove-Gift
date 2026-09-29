@@ -1119,21 +1119,30 @@
 
     ];
 
-    /* Escolhe a mensagem do dia: um hash simples de "AAAA-MM-DD"
-       (data local do celular dela) vira um índice do array.
-       Resultado: a MESMA mensagem o dia inteiro; troca à meia-noite. */
+    /* Escolhe a mensagem do dia em RODÍZIO — sem repetir nenhuma até
+       passar por todas as MENSAGENS, depois recomeça do início.
+
+       Como funciona: conta quantos dias se passaram desde DATA_BASE
+       (usando a data LOCAL do celular dela, não UTC) e usa esse número
+       módulo a quantidade de mensagens como índice. Resultado: a MESMA
+       mensagem o dia inteiro, e amanhã é sempre a PRÓXIMA da lista —
+       troca sozinha à meia-noite, sem repetição até dar a volta.
+
+       >>> DATA_BASE = dia em que a mensagem #1 é exibida.
+       Deixei hoje (dia em que o rodízio foi ligado) para ela já ver
+       a mensagem 1 hoje mesmo. */
+    const DATA_BASE = new Date(2026, 8, 29); // 29/09/2026 (mês 0-indexado: 8 = setembro)
+
     function mensagemDoDia() {
       const agora = new Date();
-      const chave =
-        agora.getFullYear() + "-" +
-        String(agora.getMonth() + 1).padStart(2, "0") + "-" +
-        String(agora.getDate()).padStart(2, "0");
+      const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
 
-      let hash = 0;
-      for (let k = 0; k < chave.length; k++) {
-        hash = (hash * 31 + chave.charCodeAt(k)) | 0;
-      }
-      const idx = Math.abs(hash) % MENSAGENS.length;
+      const MS_POR_DIA = 24 * 60 * 60 * 1000;
+      const diasPassados = Math.round((hoje - DATA_BASE) / MS_POR_DIA);
+
+      // módulo "seguro" pra nunca dar índice negativo, mesmo se o
+      // relógio do aparelho estiver antes da DATA_BASE
+      const idx = ((diasPassados % MENSAGENS.length) + MENSAGENS.length) % MENSAGENS.length;
       return MENSAGENS[idx];
     }
 
